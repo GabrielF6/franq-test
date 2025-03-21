@@ -2,77 +2,45 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import styled from 'styled-components';
-
-const SignupWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(to right, #a0e5bb 0%, #fad0c4 100%);
-  font-family: 'Arial', sans-serif;
-`;
-
-const Title = styled.h1`
-  color: white;
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-`;
-
-const Input = styled.input`
-  padding: 1rem;
-  margin: 0.5rem 0;
-  width: 300px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  outline: none;
-  transition: 0.3s;
-
-  &:focus {
-    border-color: #3da8a3;
-  }
-
-  @media (max-width: 600px) {
-    width: 250px;
-  }
-`;
-
-const Button = styled.button`
-  padding: 1rem;
-  margin: 0.5rem 0;
-  width: 300px;
-  background-color: #2e8b6c;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: 0.3s;
-  &:hover {
-    background-color: #fad0c4;
-  }
-
-  @media (max-width: 600px) {
-    width: 250px;
-  }
-`;
+import './signup.css'; // Importando o CSS
 
 export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const router = useRouter();
 
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const isValidPassword = (password: string) => {
+    return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+  };
+
   const handleSignup = () => {
+    setEmailError('');
+    setPasswordError('');
+
     if (!email || !password) {
       alert('Preencha todos os campos!');
       return;
     }
 
+    if (!isValidEmail(email)) {
+      setEmailError('Digite um e-mail válido (ex: usuario@email.com)');
+      return;
+    }
+
+    if (!isValidPassword(password)) {
+      setPasswordError('A senha deve ter pelo menos 8 caracteres, incluindo letras, números e um caractere especial.');
+      return;
+    }
+
     const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
 
-    if (storedUsers.some((user: {email: string, password: string}) => user.email === email)) {
+    if (storedUsers.some((user: { email: string }) => user.email === email)) {
       alert('Este e-mail já está cadastrado! Faça login.');
       return;
     }
@@ -85,22 +53,28 @@ export default function Signup() {
   };
 
   return (
-    <SignupWrapper>
-      <Title>Cadastrar</Title>
-      <Input
+    <div className="signup-wrapper">
+      <h1 className="title">Cadastrar</h1>
+      <input
         type="email"
+        className="input"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Input
+      {emailError && <p className="error-text">{emailError}</p>}
+
+      <input
         type="password"
+        className="input"
         placeholder="Senha"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button onClick={handleSignup}>Cadastrar</Button>
-      <Button onClick={() => router.push('/')}>Voltar para Login</Button>
-    </SignupWrapper>
+      {passwordError && <p className="error-text">{passwordError}</p>}
+
+      <button className="button" onClick={handleSignup}>Cadastrar</button>
+      <button className="button" onClick={() => router.push('/')}>Voltar para Login</button>
+    </div>
   );
 }

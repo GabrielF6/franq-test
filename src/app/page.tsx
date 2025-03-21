@@ -1,85 +1,15 @@
-'use client';
+"use client";
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import styled from 'styled-components';
-
-const LoginWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-  font-family: 'Arial', sans-serif;
-`;
-
-const Title = styled.h1`
-  color: white;
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-`;
-
-const Input = styled.input`
-  padding: 1rem;
-  margin: 0.5rem 0;
-  width: 300px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  outline: none;
-  transition: 0.3s;
-
-  &:focus {
-    border-color: #4facfe;
-  }
-
-  @media (max-width: 600px) {
-    width: 250px;
-  }
-`;
-
-const Button = styled.button`
-  padding: 1rem;
-  margin: 0.5rem 0;
-  width: 300px;
-  background-color: #4facfe;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: 0.3s;
-  &:hover {
-    background-color: #00f2fe;
-  }
-
-  @media (max-width: 600px) {
-    width: 250px;
-  }
-`;
-
-const ButtonLink = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  text-decoration: underline;
-  transition: 0.3s;
-
-  &:hover {
-    color: #00f2fe;
-  }
-`;
-
+import styles from './login.module.css';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
   const handleLogin = () => {
-    if (!email || !password) {
+    if (!email || !password || typeof window === 'undefined') {
       alert('Preencha todos os campos!');
       return;
     }
@@ -102,22 +32,28 @@ export default function Login() {
   };
 
   return (
-    <LoginWrapper>
-      <Title>Login</Title>
-      <Input
+    <div className={styles.loginWrapper}>
+      <h1 className={styles.title}>Login</h1>
+      <input
+        className={`${styles.input} ${styles.inputMobile}`}
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Input
+      <input
+        className={`${styles.input} ${styles.inputMobile}`}
         type="password"
         placeholder="Senha"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button onClick={handleLogin}>Entrar</Button>
-      <ButtonLink onClick={() => router.push('/signup')}>Cadastrar</ButtonLink>
-    </LoginWrapper>
+      <button className={`${styles.button} ${styles.buttonMobile}`} onClick={handleLogin}>
+        Entrar
+      </button>
+      <button className={styles.buttonLink} onClick={() => router.push('/signup')}>
+        Cadastrar
+      </button>
+    </div>
   );
 }

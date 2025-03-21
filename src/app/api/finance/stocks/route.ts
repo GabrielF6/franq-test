@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 
-type StockProps = {buy: number, name: string, sell: number, variation: number}
+type CurrenciesProps = {buy: number, name: string, sell: number, variation: number}
+type StockProps = {points: number, name: string, location: string, variation: number}
 
 export type StocksResponse = {
   available_sources: [];
-  currencies: Record<string, StockProps>;
+  currencies: Record<string, CurrenciesProps>;
   stocks: Record<string, StockProps>;
   taxes: [];
 };

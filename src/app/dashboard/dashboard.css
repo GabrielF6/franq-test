@@ -1,0 +1,117 @@
+.dashboard-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: auto;
+    background: linear-gradient(to right, #2c3e50 0%, #34495e 100%);
+    font-family: "Arial", sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-wrapper {
+      padding: 15px;
+    }
+  }
+  
+  .title {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    .title {
+      font-size: 2rem;
+    }
+  }
+  
+  .stock-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    color: white;
+  }
+  
+  .stock-item {
+    padding: 10px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .stock-item:nth-child(even) {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .stock-item span:first-child {
+    font-weight: bold;
+  }
+  
+  .stock-item.positive span:last-child {
+    color: #3fb83f;
+  }
+  
+  .stock-item.negative span:last-child {
+    color: #880a0a;
+  }
+  
+  @media (max-width: 768px) {
+    .stock-item {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .chart-wrapper {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    height: 33vh;
+    background: rgba(0, 0, 0, 0.9);
+    transition: bottom 0.3s ease-in-out;
+    padding: 15px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .chart-wrapper.visible {
+    bottom: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .chart-wrapper {
+      height: 50vh;
+    }
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .current-value {
+    color: white;
+    font-size: 1.2rem;
+    margin-top: 10px;
+  }
+  

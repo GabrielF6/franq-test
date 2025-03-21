@@ -114,6 +114,7 @@ export default function Dashboard() {
   const [historicalData, setHistoricalData] = useState<{ time: string; value: number }[]>([]);
   const [isChartVisible, setIsChartVisible] = useState(false);
 
+  // Function to fetch stock data
   useEffect(() => {
     const fetchStocks = async () => {
       const res = await fetch('/api/finance/stocks');
@@ -121,27 +122,28 @@ export default function Dashboard() {
       setStocks(data.results);
 
       const timestamp = new Date().toLocaleTimeString();
-      const newData = JSON.parse(localStorage.getItem('stockHistory') || '[]');
-      newData.push({ time: timestamp, data: data.results });
-      localStorage.setItem('stockHistory', JSON.stringify(newData));
+
+      setHistoricalData((prevData) => {
+        if (selectedStock) {
+          const newValue = data.results?.currencies?.[selectedStock]?.buy || data.results?.stocks?.[selectedStock]?.buy;
+          if (newValue) {
+            return [...prevData, { time: timestamp, value: newValue }].slice(-20); // Limit to last 20 data points
+          }
+        }
+        return prevData;
+      });
     };
 
     fetchStocks();
     const interval = setInterval(fetchStocks, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedStock]); // Now updates whenever `selectedStock` changes
 
-  const handleStockClick = (stockKey: string, value: number) => {
+  // Function to handle stock selection
+  const handleStockClick = (stockKey: string) => {
     setSelectedStock(stockKey);
     setIsChartVisible(true);
-
-    const storedData = JSON.parse(localStorage.getItem('stockHistory') || '[]');
-    const chartData = storedData.map((entry: any) => ({
-      time: entry.time,
-      value: entry.data?.currencies?.[stockKey]?.buy || entry.data?.stocks?.[stockKey]?.buy,
-    }));
-
-    setHistoricalData(chartData);
+    setHistoricalData([]); // Clear data when switching stocks
   };
 
   useAuth();
@@ -154,7 +156,7 @@ export default function Dashboard() {
         {stocks
           ? Object.entries(stocks.currencies)
               .map(([key, value]) => key !== 'source' && (
-                <StockItem key={key} variation={value.variation} onClick={() => handleStockClick(key, value.buy)}>
+                <StockItem key={key} variation={value.variation} onClick={() => handleStockClick(key)}>
                   <span>{key}</span>
                   <span>
                     {value.buy} ({value.variation}%)
@@ -167,7 +169,7 @@ export default function Dashboard() {
       <StockList>
         {stocks
           ? Object.entries(stocks.stocks).map(([key, value]) => (
-              <StockItem key={key} variation={value.variation} onClick={() => handleStockClick(key, value.buy)}>
+              <StockItem key={key} variation={value.variation} onClick={() => handleStockClick(key)}>
                 <span>{key}</span>
                 <span>
                   {value.buy} ({value.variation}%)

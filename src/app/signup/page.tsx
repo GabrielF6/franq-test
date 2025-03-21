@@ -72,7 +72,7 @@ export default function Signup() {
 
     const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
 
-    if (storedUsers.some((user: { email: string }) => user.email === email)) {
+    if (storedUsers.some((user: {email: string, password: string}) => user.email === email)) {
       alert('Este e-mail já está cadastrado! Faça login.');
       return;
     }
@@ -100,6 +100,7 @@ export default function Signup() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <Button onClick={handleSignup}>Cadastrar</Button>
+      <Button onClick={() => router.push('/')}>Voltar para Login</Button>
     </SignupWrapper>
   );
 }

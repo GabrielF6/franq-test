@@ -1,95 +1,123 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import styled from 'styled-components';
+
+const LoginWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  font-family: 'Arial', sans-serif;
+`;
+
+const Title = styled.h1`
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+`;
+
+const Input = styled.input`
+  padding: 1rem;
+  margin: 0.5rem 0;
+  width: 300px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+
+  &:focus {
+    border-color: #4facfe;
+  }
+
+  @media (max-width: 600px) {
+    width: 250px;
+  }
+`;
+
+const Button = styled.button`
+  padding: 1rem;
+  margin: 0.5rem 0;
+  width: 300px;
+  background-color: #4facfe;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background-color: #00f2fe;
+  }
+
+  @media (max-width: 600px) {
+    width: 250px;
+  }
+`;
+
+const ButtonLink = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: 0.3s;
+
+  &:hover {
+    color: #00f2fe;
+  }
+`;
+
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const handleLogin = () => {
+    if (email && password) {
+      const storedUser = localStorage.getItem('user');
+
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        if (user.email === email) {
+          // Here you would normally verify the password (for simplicity, we assume it's correct)
+          localStorage.setItem('user', JSON.stringify({ email }));
+          const now = Date.now();
+          localStorage.setItem('lastLogin', now.toString());
+          router.push('/dashboard');
+        } else {
+          alert('Email ou senha incorretos!');
+        }
+      } else {
+        alert('Usuário não encontrado. Por favor, cadastre-se.');
+      }
+    } else {
+      alert('Preencha todos os campos!');
+    }
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <LoginWrapper>
+      <Title>Login</Title>
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Senha"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button onClick={handleLogin}>Entrar</Button>
+      <ButtonLink onClick={() => router.push('/signup')}>Cadastrar</ButtonLink>
+    </LoginWrapper>
   );
 }

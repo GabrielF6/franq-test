@@ -79,25 +79,25 @@ export default function Login() {
   const router = useRouter();
 
   const handleLogin = () => {
-    if (email && password) {
-      const storedUser = localStorage.getItem('user');
+    if (!email || !password) {
+      alert('Preencha todos os campos!');
+      return;
+    }
 
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        if (user.email === email) {
-          // Here you would normally verify the password (for simplicity, we assume it's correct)
-          localStorage.setItem('user', JSON.stringify({ email }));
-          const now = Date.now();
-          localStorage.setItem('lastLogin', now.toString());
-          router.push('/dashboard');
-        } else {
-          alert('Email ou senha incorretos!');
-        }
+    const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+
+    const user = storedUsers.find((u: { email: string }) => u.email === email);
+
+    if (user) {
+      if (user.password === password) {
+        localStorage.setItem('user', JSON.stringify({ email }));
+        localStorage.setItem('lastLogin', Date.now().toString());
+        router.push('/dashboard');
       } else {
-        alert('Usuário não encontrado. Por favor, cadastre-se.');
+        alert('Senha incorreta!');
       }
     } else {
-      alert('Preencha todos os campos!');
+      alert('Usuário não encontrado. Por favor, cadastre-se.');
     }
   };
 

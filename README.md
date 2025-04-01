@@ -1,4 +1,5 @@
-
+## Objective
+This project aims to create a simple login with localhost session expiration management, and listing some stocks and currencies from a free api, with the possibility of chosing one given stock, seeing its history (since the first opening of the listing page, the data is stored in localhost) on a chart, with mobile responsiveness as well as desktop.
 
 ## Getting Started
 

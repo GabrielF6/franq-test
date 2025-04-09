@@ -16,3 +16,5 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## See it online
+This aplication is deployed on vercel: https://franq-test.vercel.app/
